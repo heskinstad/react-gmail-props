@@ -1,15 +1,13 @@
 import Email from './Email'
 
-function Emails({filteredEmails, toggleRead, toggleStar}) {
+function Emails({filteredEmails, toggleRead, toggleStar, setCurrentEmail}) {
     return (
         <>
-            <main className="emails">
-                <ul>
-                {filteredEmails.map((email, index) => (
-                    <Email key={index} email={email} toggleRead={toggleRead} toggleStar={toggleStar} />
-                ))}
-                </ul>
-            </main>
+            <ul>
+            {filteredEmails.map((email, index) => (
+                <Email key={index} email={email} toggleRead={toggleRead} toggleStar={toggleStar} setCurrentEmail={setCurrentEmail} />
+            ))}
+            </ul>
         </>
     )
 }

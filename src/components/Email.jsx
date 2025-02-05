@@ -1,8 +1,10 @@
-function Email({email, toggleRead, toggleStar}) {
+function Email({email, toggleRead, toggleStar, setCurrentEmail}) {
+    const stopPropagation = (e) => e.stopPropagation();
     return (
         <>
             <li
                 className={`email ${email.read ? 'read' : 'unread'}`}
+                onClick={() => setCurrentEmail(email)}
                 >
                 <div className="select">
                     <input
@@ -10,6 +12,7 @@ function Email({email, toggleRead, toggleStar}) {
                     type="checkbox"
                     checked={email.read}
                     onChange={() => toggleRead(email)}
+                    onClick={stopPropagation}
                     />
                 </div>
                 <div className="star">
@@ -18,6 +21,7 @@ function Email({email, toggleRead, toggleStar}) {
                     type="checkbox"
                     checked={email.starred}
                     onChange={() => toggleStar(email)}
+                    onClick={stopPropagation}
                     />
                 </div>
                 <div className="sender">{email.sender}</div>

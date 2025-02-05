@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import initialEmails from './data/emails'
 import Emails from './components/Emails'
-//import Email from './components/Email'
+import EmailView from './components/EmailView'
 import Search from './components/Search'
 
 import './styles/App.css'
@@ -15,6 +15,8 @@ function App() {
   const [emails, setEmails] = useState(initialEmails)
   const [hideRead, setHideRead] = useState(false)
   const [currentTab, setCurrentTab] = useState('inbox')
+  const [currentEmail, setCurrentEmail] = useState(null)
+  const [searchBar, setSearchBar] = useState("")
 
   const unreadEmails = emails.filter(email => !email.read)
   const starredEmails = emails.filter(email => email.starred)
@@ -44,6 +46,10 @@ function App() {
   if (currentTab === 'starred')
     filteredEmails = getStarredEmails(filteredEmails)
 
+  if (searchBar) // can search for either the sender or the title
+    filteredEmails = filteredEmails.filter(filteredEmails => filteredEmails.title.toLowerCase().includes(searchBar.toLowerCase())
+    || filteredEmails.sender.toLowerCase().includes(searchBar.toLowerCase()))
+
   return (
     <div className="app">
       <header className="header">
@@ -58,20 +64,20 @@ function App() {
           />
         </div>
 
-        <Search />
+        <Search setSearchBar={setSearchBar} />
       </header>
       <nav className="left-menu">
         <ul className="inbox-list">
           <li
             className={`item ${currentTab === 'inbox' ? 'active' : ''}`}
-            onClick={() => setCurrentTab('inbox')}
+            onClick={() => {setCurrentTab('inbox'); setCurrentEmail(null)}} // I replaced the back button with clicking on 'inbox' or 'starred'
           >
             <span className="label">Inbox</span>
             <span className="count">{unreadEmails.length}</span>
           </li>
           <li
             className={`item ${currentTab === 'starred' ? 'active' : ''}`}
-            onClick={() => setCurrentTab('starred')}
+            onClick={() => {setCurrentTab('starred'); setCurrentEmail(null)}} // I replaced the back button with clicking on 'inbox' or 'starred'
           >
             <span className="label">Starred</span>
             <span className="count">{starredEmails.length}</span>
@@ -88,7 +94,13 @@ function App() {
           </li>
         </ul>
       </nav>
-      <Emails filteredEmails={filteredEmails} toggleRead={toggleRead} toggleStar={toggleStar} />
+      <main className="emails">
+        {currentEmail ? (
+        <EmailView email={currentEmail} onBack={() => setCurrentEmail(null)}/>
+        ) : (
+        <Emails filteredEmails={filteredEmails} toggleRead={toggleRead} toggleStar={toggleStar} setCurrentEmail={setCurrentEmail} />)}
+      </main>
+      
     </div>
   )
 }
