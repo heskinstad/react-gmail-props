@@ -1,6 +1,9 @@
 import { useState } from 'react'
 
 import initialEmails from './data/emails'
+import Emails from './components/Emails'
+//import Email from './components/Email'
+import Search from './components/Search'
 
 import './styles/App.css'
 
@@ -55,9 +58,7 @@ function App() {
           />
         </div>
 
-        <div className="search">
-          <input className="search-bar" placeholder="Search mail" />
-        </div>
+        <Search />
       </header>
       <nav className="left-menu">
         <ul className="inbox-list">
@@ -87,35 +88,7 @@ function App() {
           </li>
         </ul>
       </nav>
-      <main className="emails">
-        <ul>
-          {filteredEmails.map((email, index) => (
-            <li
-              key={index}
-              className={`email ${email.read ? 'read' : 'unread'}`}
-            >
-              <div className="select">
-                <input
-                  className="select-checkbox"
-                  type="checkbox"
-                  checked={email.read}
-                  onChange={() => toggleRead(email)}
-                />
-              </div>
-              <div className="star">
-                <input
-                  className="star-checkbox"
-                  type="checkbox"
-                  checked={email.starred}
-                  onChange={() => toggleStar(email)}
-                />
-              </div>
-              <div className="sender">{email.sender}</div>
-              <div className="title">{email.title}</div>
-            </li>
-          ))}
-        </ul>
-      </main>
+      <Emails filteredEmails={filteredEmails} toggleRead={toggleRead} toggleStar={toggleStar} />
     </div>
   )
 }
